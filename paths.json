@@ -1,10 +1,10 @@
 {
   "mappings": [
-    "/content/universal-editor-starter/:/",
-    "/content/universal-editor-starter/configuration:/.helix/config.json",
-    "/content/universal-editor-starter/metadata:/metadata.json"
+    "/content/ritsriva-ue/:/",
+    "/content/ritsriva-ue/configuration:/.helix/config.json",
+    "/content/ritsriva-ue/metadata:/metadata.json"
   ],
   "includes": [
-    "/content/universal-editor-starter/"
+    "/content/ritsriva-ue/"
   ]
 }
