@@ -180,6 +180,24 @@
      ]
   },
   {
+    "id": "custom-asset-one",
+    "fields": [
+      {
+        "component": "custom-asset-namespace:custom-asset",
+        "name": "image",
+        "label": "Image",
+        "configUrl": "https://raw.githubusercontent.com/gazal2708/edsue/refs/heads/main/tools/asset-selector/image.config.json",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "imageTitle",
+        "label": "Alt Text",
+        "valueType": "string"
+      }
+    ]
+  },
+  {
     "id": "columns",
     "fields": [
       {
