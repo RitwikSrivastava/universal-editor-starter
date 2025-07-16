@@ -1,5 +1,5 @@
 mountpoints:
   /:
-    url: "https://author-p158050-e1677923.adobeaemcloud.com/bin/franklin.delivery/ritwiksrivastava/universal-editor-starter/main"
+    url: "https://author-p66302-e574366.adobeaemcloud.com/bin/franklin.delivery/ritwiksrivastava/universal-editor-starter/main"
     type: "markup"
     suffix: ".html"
