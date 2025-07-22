@@ -158,10 +158,9 @@ function setup() {
   // This can be overridden by setting window.hlx.aemassets.smartCrops before this script loads
   if (!window.hlx.aemassets.smartCrops) {
     window.hlx.aemassets.smartCrops = {
-      mobile: { minWidth: 0, maxWidth: 599 },
-      tablet: { minWidth: 600, maxWidth: 899 },
-      desktop: { minWidth: 900, maxWidth: 1199 },
-      wide: { minWidth: 1200, maxWidth: 9999 },
+      Small: { minWidth: 0, maxWidth: 767 },
+      Medium: { minWidth: 768, maxWidth: 1023 },
+      Large: { minWidth: 1024, maxWidth: 9999 },
     };
   }
 }
@@ -349,126 +348,11 @@ function createOptimizedPicture(
   return picture;
 }
 
-/**
- * Appends query parameters to a URL
- * @param {URL} url - The URL to append parameters to
- * @param {URLSearchParams} searchParams - The search parameters to append
- * @returns {string} - The URL with appended parameters
- */
-function appendQueryParams(url, searchParams) {
-  const newUrl = new URL(url);
-  searchParams.forEach((value, key) => {
-    newUrl.searchParams.set(key, value);
-  });
-  return newUrl.toString();
-}
 
-/**
- * Creates an optimized picture element for an image
- * leveraging smartcrop config from 'window.hlx.aemassets.smartCrops'.
- * @param {string} src The image source URL
- * @param {string} alt The image alt text
- * @param {boolean} eager Whether to load the image eagerly
- * @param {object[]} breakpoints The breakpoints to use
- * @returns {Element} The picture element
- */
-export function createOptimizedPictureWithSmartcrop(src, alt = '', eager = false, breakpoints = []) {
-  const isAbsoluteUrl = /^https?:\/\//i.test(src);
 
-  // initialise breakpoint to project level smartcrop config unless needed to customise
-  const smartcropBreakpoints = breakpoints.length !== 0 ? breakpoints
-    : Object.entries(window.hlx.aemassets?.smartCrops).map(
-      ([name, { minWidth, maxWidth }]) => ({
-        media: `(min-width: ${minWidth}px) and (max-width: ${maxWidth}px)`,
-        smartcrop: name,
-      }),
-    );
 
-  const url = isAbsoluteUrl ? new URL(src) : new URL(src, window.location.href);
-  const picture = document.createElement('picture');
-  const { pathname } = url;
-  const ext = pathname.substring(pathname.lastIndexOf('.') + 1);
 
-  // webp
-  smartcropBreakpoints.forEach((br) => {
-    const source = document.createElement('source');
-    if (br.media) source.setAttribute('media', br.media);
-    source.setAttribute('type', 'image/webp');
-    const searchParams = new URLSearchParams({ smartcrop: br.smartcrop, format: 'webply' });
-    source.setAttribute('srcset', appendQueryParams(url, searchParams));
-    picture.appendChild(source);
-  });
 
-  // fallback for non-webp
-  smartcropBreakpoints.forEach((br) => {
-    const searchParams = new URLSearchParams({ smartcrop: br.smartcrop, format: ext });
-    const source = document.createElement('source');
-    if (br.media) source.setAttribute('media', br.media);
-    source.setAttribute('srcset', appendQueryParams(url, searchParams));
-    picture.appendChild(source);
-  });
-
-  // append the default image eliminating smartcrop query param if present
-  const img = document.createElement('img');
-  img.setAttribute('loading', eager ? 'eager' : 'lazy');
-  img.setAttribute('alt', alt);
-  picture.appendChild(img);
-  url.searchParams.delete('smartcrop');
-  img.setAttribute('src', url.toString());
-
-  picture.classList.add('smartcrop');
-  return picture;
-}
-
-/**
- * to check if given src is a DM OpenAPI URL
- */
-function isDMOpenAPIUrl(src) {
-  return /^(https?:\/\/(.*)\/adobe\/assets\/urn:aaid:aem:(.*))/gm.test(src);
-}
-
-/**
- * to check if the page contains meta tag for smartcrop rendering
- */
-function hasImageSmartcropMeta() {
-  const metaTags = document.getElementsByTagName('meta');
-  const matchingMeta = Array.from(metaTags).find((meta) => meta.name === 'smartcrop' && meta.content === 'true');
-  return !!matchingMeta;
-}
-
-/**
- * to filter out all the external images on the page and set data-smartcrop-status=loading
- * if the image is a DM OpenAPI URL
- */
-function filterSmartCropImagesOnPage() {
-  // Early return if smartcrop config is missing
-  if (window.hlx?.aemassets?.smartCrops === undefined) {
-    return;
-  }
-
-  // Collect all external images into an array
-  const extImages = [];
-
-  if (hasImageSmartcropMeta()) {
-    // If smartcrop is enabled at page level, collect all <a> tags
-    extImages.push(...document.querySelectorAll('a'));
-  } else {
-    // if not enabled at page level, collect all <a> tags within block and section elements
-    extImages.push(...document.querySelectorAll('.smartcrop a'));
-    document.querySelectorAll('.section-metadata > div > div').forEach((sectionMeta) => {
-      if (sectionMeta.innerText === 'smartcrop') {
-        extImages.push(...sectionMeta.closest('.section-metadata').parentElement.querySelectorAll('a'));
-      }
-    });
-  }
-
-  // Apply the data-smartcrop-status attribute to all collected images if a DM OpenAPI URL
-  extImages.forEach((extImage) => {
-    if (isDMOpenAPIUrl(extImage.getAttribute('href'))) {
-      extImage.setAttribute('data-smartcrop-status', 'loading');
-    }
-  });
-}
 
 /**
  * Set template (page structure) and theme (page styles).
@@ -484,8 +368,7 @@ function decorateTemplateAndTheme() {
   const theme = getMetadata('theme');
   if (theme) addClasses(document.body, theme);
 
-  // Initialize smartcrop functionality
-  filterSmartCropImagesOnPage();
+
 }
 
 /**
@@ -889,7 +772,5 @@ export {
   toClassName,
   waitForFirstImage,
   wrapTextNodes,
-  filterSmartCropImagesOnPage,
-  isDMOpenAPIUrl,
-  hasImageSmartcropMeta,
+
 };

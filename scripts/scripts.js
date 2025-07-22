@@ -12,6 +12,11 @@ import {
   loadCSS,
 } from './aem.js';
 
+import {
+  decorateExternalImages,
+  decorateImagesFromAlt,
+} from './aem-assets.js';
+
 /**
  * Moves all the attributes from a given elmenet to another given element.
  * @param {Element} from the element to copy attributes from
@@ -83,6 +88,8 @@ export function decorateMain(main) {
   buildAutoBlocks(main);
   decorateSections(main);
   decorateBlocks(main);
+  decorateExternalImages(main, '//External Image//');
+  decorateImagesFromAlt(main);
 }
 
 /**
