@@ -259,8 +259,15 @@
         "component": "reference",
         "valueType": "string",
         "name": "image",
-        "label": "Image",
+        "label": "Image (Reference)",
         "multi": false
+      },
+      {
+        "component": "custom-asset-namespace:custom-asset",
+        "name": "uploadedImage",
+        "label": "Upload Image",
+        "configUrl": "https://raw.githubusercontent.com/gazal2708/edsue/refs/heads/main/tools/asset-selector/image.config.json",
+        "valueType": "string"
       },
       {
         "component": "text",
