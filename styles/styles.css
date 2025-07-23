@@ -255,26 +255,3 @@ main .section.highlight {
   margin: 0;
   padding: 40px 0;
 }
-
-/* smartcrop styles */
-.smartcrop {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.smartcrop img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* smartcrop loading state */
-[data-smartcrop-status="loading"] {
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
-}
-
-[data-smartcrop-status="loaded"] {
-  opacity: 1;
-}
